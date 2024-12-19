@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A student taking improv classes
+model Student {
+  id               String            @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String            @unique
+  levelId          String
+  level            Level             @relation(fields: [levelId], references: [id])
+  startDate        DateTime // First week of September
+  endDate          DateTime // Last week of June
+  classAttendances ClassAttendance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Different levels of improv classes (beginner, intermediary, etc.)
+model Level {
+  id        String    @id @default(cuid())
+  name      LevelName @unique
+  dayOfWeek DayOfWeek
+  students  Student[]
+  classes   Class[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Class {
+  id          String            @id @default(cuid())
+  date        DateTime
+  level       Level             @relation(fields: [levelId], references: [id])
+  levelId     String
+  attendances ClassAttendance[]
+  status      ClassStatus       @default(PLANNED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([levelId, date])
+}
+
+model ClassAttendance {
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId   String
+
+  type   AttendanceType   @default(REGULAR)
+  status AttendanceStatus @default(PLANNED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, classId])
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum AttendanceType {
+  REGULAR
+  VISITOR
+}
+
+enum AttendanceStatus {
+  PLANNED
+  ABSENT
+  CANCELLED
+}
+
+enum LevelName {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ClassStatus {
+  PLANNED
+  CANCELLED
+}
