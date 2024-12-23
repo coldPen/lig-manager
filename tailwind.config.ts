@@ -18,5 +18,8 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["pastel"],
+  },
 } satisfies Config

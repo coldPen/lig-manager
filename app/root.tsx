@@ -10,17 +10,6 @@ import {
 import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 
-// For reference, for later use in loaders and actions
-export const AttendanceType = {
-  REGULAR: "REGULAR",
-  VISITOR: "VISITOR",
-} as const
-export const AttendanceStatus = {
-  PLANNED: "PLANNED",
-  ABSENT: "ABSENT",
-  CANCELLED: "CANCELLED",
-} as const
-
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -37,7 +26,7 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme="pastel">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

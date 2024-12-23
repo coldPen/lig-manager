@@ -99,12 +99,14 @@ async function createClasses(startDate: Date, endDate: Date) {
     const classDates = dateRange
       .filter((date) => date.getDay() === dayIndex)
       .map((date) => {
-        const utcDate = new Date()
-        utcDate.setUTCFullYear(date.getFullYear())
-        utcDate.setUTCMonth(date.getMonth())
-        utcDate.setUTCDate(date.getDate())
-        utcDate.setUTCHours(19, 0, 0, 0) // 19:00:00 UTC is 20:00:00 UTC+1
-        return utcDate
+        return new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          20,
+          0,
+          0,
+        )
       })
 
     // Create a class record for each date
@@ -168,8 +170,8 @@ async function createClassAttendances() {
 
 async function main() {
   // Define the current academic year
-  const startDate = new Date("2024-09-02T00:00:00Z")
-  const endDate = new Date("2025-06-30T00:00:00Z")
+  const startDate = new Date("2024-09-02T00:00:00+01:00")
+  const endDate = new Date("2025-06-30T00:00:00+01:00")
 
   const totalStudents = 36
 
