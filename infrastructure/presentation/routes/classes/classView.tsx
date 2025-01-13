@@ -1,10 +1,9 @@
-import type { Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classView"
+import { type Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classView"
 import type { LevelName } from "domain/types/level"
-import { cancelClass } from "infrastructure/db/cancelClass"
-import { getClass } from "infrastructure/db/getClass"
-import { reinstateClass } from "infrastructure/db/reinstateClass"
+import { classRepository } from "infrastructure/db/index.server"
 import { Form, redirect } from "react-router"
 import { match } from "ts-pattern"
+import { AttendanceList } from "~/components/AttendanceList"
 import { Button } from "~/components/ui/button"
 import {
   Dialog,
@@ -18,10 +17,9 @@ import {
 } from "~/components/ui/dialog"
 import { levelLabels } from "~/constants/labels"
 import { convertDateToLocaleStrings } from "~/lib/convertDateToLocalStrings"
-import { AttendanceList } from "~/routes/classes/classView/AttendanceList"
 
 export async function loader({ params: { classId } }: Route.LoaderArgs) {
-  return { class_: await getClass(classId) }
+  return { class_: await classRepository.getClass(classId) }
 }
 export type LoaderData = Awaited<ReturnType<typeof loader>>
 
@@ -31,11 +29,11 @@ export async function action({ params, request }: Route.ActionArgs) {
 
   switch (actionType) {
     case "cancelClass": {
-      await cancelClass(params.classId)
+      await classRepository.cancelClass(params.classId)
       return redirect("/classes")
     }
     case "reinstateClass": {
-      await reinstateClass(params.classId)
+      await classRepository.reinstateClass(params.classId)
     }
   }
 }

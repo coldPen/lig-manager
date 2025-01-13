@@ -1,6 +1,6 @@
 import type { Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classList"
 import { type Class } from "domain/types/class"
-import { getIncomingClasses } from "infrastructure/db/getIncomingClasses"
+import { classRepository } from "infrastructure/db/index.server"
 import { buttonVariants } from "infrastructure/presentation/components/ui/button"
 import { convertDateToLocaleStrings } from "infrastructure/presentation/lib/convertDateToLocalStrings"
 import { useId } from "react"
@@ -16,7 +16,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const includeCancelled = url.searchParams.get("includeCancelled") === "true"
 
   return {
-    incomingClasses: await getIncomingClasses(includeCancelled),
+    incomingClasses: await classRepository.getIncomingClasses(includeCancelled),
     includeCancelled,
   }
 }
