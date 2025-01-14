@@ -1,6 +1,6 @@
 import { type Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classView"
 import type { LevelName } from "domain/types/level"
-import { classRepository } from "infrastructure/db/index.server"
+import { getRepository } from "application/server"
 import { Form, redirect } from "react-router"
 import { match } from "ts-pattern"
 import { AttendanceList } from "~/components/AttendanceList"
@@ -19,7 +19,7 @@ import { levelLabels } from "~/constants/labels"
 import { convertDateToLocaleStrings } from "~/lib/convertDateToLocalStrings"
 
 export async function loader({ params: { classId } }: Route.LoaderArgs) {
-  return { class_: await classRepository.getClass(classId) }
+  return { class_: await getRepository("class").getClass(classId) }
 }
 export type LoaderData = Awaited<ReturnType<typeof loader>>
 
@@ -29,11 +29,11 @@ export async function action({ params, request }: Route.ActionArgs) {
 
   switch (actionType) {
     case "cancelClass": {
-      await classRepository.cancelClass(params.classId)
+      await getRepository("class").cancelClass(params.classId)
       return redirect("/classes")
     }
     case "reinstateClass": {
-      await classRepository.reinstateClass(params.classId)
+      await getRepository("class").reinstateClass(params.classId)
     }
   }
 }
