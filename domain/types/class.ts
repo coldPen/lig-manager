@@ -13,6 +13,12 @@ export interface Class {
   }
 }
 
+// export interface DetailedClass extends Class {
+//   attendances: Array<ClassAttendance>
+// }
 export interface DetailedClass extends Class {
-  attendances: Array<ClassAttendance>
+  attendances: {
+    regular: Array<ClassAttendance & { type: "REGULAR" }>
+    visitor: Array<ClassAttendance & { type: "VISITOR" }>
+  }
 }

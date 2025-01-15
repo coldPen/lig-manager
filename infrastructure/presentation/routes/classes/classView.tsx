@@ -1,20 +1,12 @@
-import { type Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classView"
-import type { LevelName } from "domain/types/level"
+import type { Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classView"
 import { getRepository } from "application/server"
-import { Form, redirect } from "react-router"
-import { match } from "ts-pattern"
+import type { ClassStatus } from "domain/types/class"
+import type { LevelName } from "domain/types/level"
+import type { ReactNode } from "react"
+import { redirect } from "react-router"
 import { AttendanceList } from "~/components/AttendanceList"
-import { Button } from "~/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "~/components/ui/dialog"
+import { CancelClassDialog } from "~/components/CancelClassDialog"
+import { ReinstateClassDialog } from "~/components/ReinstateClassDialog"
 import { levelLabels } from "~/constants/labels"
 import { convertDateToLocaleStrings } from "~/lib/convertDateToLocalStrings"
 
@@ -46,72 +38,18 @@ export const handle = {
 }
 export type Handle = typeof handle
 
+const statusDialogs: Record<ClassStatus, ReactNode> = {
+  PLANNED: <CancelClassDialog />,
+  CANCELLED: <ReinstateClassDialog />,
+}
+
 export default function ClassView({
   loaderData: { class_ },
 }: Route.ComponentProps) {
   return (
     <div className="flex flex-col gap-4 items-start">
-      {match(class_.status)
-        .with("CANCELLED", () => <ReinstateClassDialog />)
-        .with("PLANNED", () => <CancelClassDialog />)
-        .exhaustive()}
+      {statusDialogs[class_.status]}
       <AttendanceList class_={class_} />
     </div>
-  )
-}
-
-function CancelClassDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="destructive">💣 Annuler le cours</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirmer l'annulation</DialogTitle>
-          <DialogDescription>
-            Vous ne pourrez plus modifier ce cours.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Oh non j'ai peur</Button>
-          </DialogClose>
-          <Form method="post">
-            <input type="hidden" name="actionType" value="cancelClass" />
-            <Button type="submit" value="cancel" variant="destructive">
-              Annuler le cours 🤘
-            </Button>
-          </Form>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function ReinstateClassDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="default">🚀 Restaurer le cours</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Restaurer le cours</DialogTitle>
-          <DialogDescription>Vous pourrez modifier ce cours.</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Non en fait</Button>
-          </DialogClose>
-          <Form method="post">
-            <input type="hidden" name="actionType" value="reinstateClass" />
-            <Button type="submit" value="reinstate" variant="default">
-              Restaurer le cours 🎉
-            </Button>
-          </Form>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   )
 }

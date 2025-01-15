@@ -1,4 +1,5 @@
 import type { DetailedClass } from "domain/types/class"
+import type { ClassAttendance } from "domain/types/classAttendance"
 import { prisma } from "~/lib/db.server"
 
 export async function getClass(classId: string): Promise<DetailedClass> {
@@ -35,5 +36,19 @@ export async function getClass(classId: string): Promise<DetailedClass> {
     throw new Error(`Class not found: ${classId}`)
   }
 
-  return class_
+  const classWithSeparatedAttendances: DetailedClass = {
+    ...class_,
+    attendances: {
+      regular: class_.attendances.filter(
+        (attendance): attendance is ClassAttendance & { type: "REGULAR" } =>
+          attendance.type === "REGULAR",
+      ),
+      visitor: class_.attendances.filter(
+        (attendance): attendance is ClassAttendance & { type: "VISITOR" } =>
+          attendance.type === "VISITOR",
+      ),
+    },
+  }
+
+  return classWithSeparatedAttendances
 }
