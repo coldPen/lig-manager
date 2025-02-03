@@ -1,8 +1,8 @@
-import pluginJs from "@eslint/js"
-import pluginReact from "eslint-plugin-react"
-import reactCompiler from "eslint-plugin-react-compiler"
-import globals from "globals"
-import tseslint from "typescript-eslint"
+import pluginJs from "@eslint/js";
+import pluginReact from "eslint-plugin-react";
+import reactCompiler from "eslint-plugin-react-compiler";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -20,4 +20,4 @@ export default [
       "plugin:react/jsx-runtime": "extends",
     },
   },
-]
+];

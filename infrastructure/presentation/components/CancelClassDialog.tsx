@@ -1,5 +1,5 @@
-import { Form } from "react-router"
-import { Button } from "~/components/ui/button"
+import { Form } from "react-router";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog"
+} from "~/components/ui/dialog";
 
 export function CancelClassDialog() {
   return (
@@ -37,5 +37,5 @@ export function CancelClassDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

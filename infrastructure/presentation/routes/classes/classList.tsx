@@ -1,30 +1,31 @@
-import type { Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classList"
-import { type Class } from "domain/types/class"
-import { getRepository } from "application/server"
-import { buttonVariants } from "infrastructure/presentation/components/ui/button"
-import { convertDateToLocaleStrings } from "infrastructure/presentation/lib/convertDateToLocalStrings"
-import { useId } from "react"
-import { Form, NavLink } from "react-router"
-import { Badge } from "~/components/ui/badge"
-import { Label } from "~/components/ui/label"
-import { Switch } from "~/components/ui/switch"
-import { levelLabels } from "~/constants/labels"
-import { cn } from "~/lib/utils"
+import type { Route } from ".react-router/types/infrastructure/presentation/routes/classes/+types/classList";
+import { getRepository } from "application/server";
+import { type Class } from "domain/types/class";
+import { buttonVariants } from "infrastructure/presentation/components/ui/button";
+import { convertDateToLocaleStrings } from "infrastructure/presentation/lib/convertDateToLocalStrings";
+import { useId } from "react";
+import { Form, NavLink } from "react-router";
+import { Badge } from "~/components/ui/badge";
+import { Label } from "~/components/ui/label";
+import { Switch } from "~/components/ui/switch";
+import { levelLabels } from "~/constants/labels";
+import { cn } from "~/lib/utils";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const url = new URL(request.url)
-  const includeCancelled = url.searchParams.get("includeCancelled") === "true"
+  const url = new URL(request.url);
+  const includeCancelled = url.searchParams.get("includeCancelled") === "true";
 
   return {
-    incomingClasses: await getRepository("class").getIncomingClasses(includeCancelled),
+    incomingClasses:
+      await getRepository("class").getIncomingClasses(includeCancelled),
     includeCancelled,
-  }
+  };
 }
 
 export default function ClassList({
   loaderData: { incomingClasses, includeCancelled },
 }: Route.ComponentProps) {
-  const switchId = useId()
+  const switchId = useId();
   return (
     <div className="flex flex-col gap-8">
       <aside>
@@ -47,11 +48,11 @@ export default function ClassList({
         ))}
       </section>
     </div>
-  )
+  );
 }
 
 function ClassPreview({ class_ }: { class_: Class }) {
-  const { date, time } = convertDateToLocaleStrings(class_.date)
+  const { date, time } = convertDateToLocaleStrings(class_.date);
   return (
     <article
       key={class_.id}
@@ -77,5 +78,5 @@ function ClassPreview({ class_ }: { class_: Class }) {
         Voir le cours
       </NavLink>
     </article>
-  )
+  );
 }

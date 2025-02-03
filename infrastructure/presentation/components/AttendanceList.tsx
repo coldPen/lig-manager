@@ -1,19 +1,19 @@
-import type { AttendanceType } from "@prisma/client"
-import type { DetailedClass } from "domain/types/class"
+import type { AttendanceType } from "@prisma/client";
+import type { DetailedClass } from "domain/types/class";
 import type {
   AttendanceStatus,
   ClassAttendance,
-} from "domain/types/classAttendance"
-import { useId } from "react"
-import { Form } from "react-router"
-import { match } from "ts-pattern"
-import { Badge, type BadgeProps } from "~/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
+} from "domain/types/classAttendance";
+import { useId } from "react";
+import { Form } from "react-router";
+import { match } from "ts-pattern";
+import { Badge, type BadgeProps } from "~/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   attendanceStatusLabels,
   attendanceTypeLabels,
   levelLabels,
-} from "~/constants/labels"
+} from "~/constants/labels";
 
 export function AttendanceList({ class_ }: { class_: DetailedClass }) {
   return (
@@ -47,14 +47,14 @@ export function AttendanceList({ class_ }: { class_: DetailedClass }) {
                   <Badge key={attendance.id} variant="secondary">
                     {`${attendance.student.firstName} ${attendance.student.lastName}`}
                   </Badge>
-                )
+                );
               })}
             </div>
           </CardContent>
         </Card>
       )}
     </div>
-  )
+  );
   // return (
   //   <Table className="table-fixed w-3/4">
   //     <TableHeader>

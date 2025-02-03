@@ -1,5 +1,5 @@
-import type { Class } from "domain/types/class"
-import { prisma } from "~/lib/db.server"
+import type { Class } from "domain/types/class";
+import { prisma } from "~/lib/db.server";
 
 export async function getIncomingClasses(
   includeCancelled = false,
@@ -25,5 +25,5 @@ export async function getIncomingClasses(
     orderBy: {
       date: "asc",
     },
-  })
+  });
 }

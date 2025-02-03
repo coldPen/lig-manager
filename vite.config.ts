@@ -1,15 +1,15 @@
-import { reactRouter } from "@react-router/dev/vite"
-import autoprefixer from "autoprefixer"
-import tailwindcss from "tailwindcss"
-import { defineConfig } from "vite"
-import babel from "vite-plugin-babel"
-import tsconfigPaths from "vite-tsconfig-paths"
+import { reactRouter } from "@react-router/dev/vite";
+import autoprefixer from "autoprefixer";
+import tailwindcss from "tailwindcss";
+import { defineConfig } from "vite";
+import babel from "vite-plugin-babel";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const ReactCompilerConfig = {
   sources: (filename: string) => {
-    return filename.indexOf("./infrastructure/presentation") !== -1
+    return filename.indexOf("./infrastructure/presentation") !== -1;
   },
-}
+};
 
 export default defineConfig({
   css: {
@@ -28,4 +28,4 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-})
+});

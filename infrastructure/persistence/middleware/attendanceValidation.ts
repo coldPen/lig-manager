@@ -1,21 +1,21 @@
-import { invariantResponse } from "@epic-web/invariant"
+import { invariantResponse } from "@epic-web/invariant";
 import {
   Prisma,
   type AttendanceStatus as PrismaAttendanceStatus,
   type AttendanceType as PrismaAttendanceType,
-} from "@prisma/client"
-import { match } from "ts-pattern"
+} from "@prisma/client";
+import { match } from "ts-pattern";
 
 const REGULAR_ALLOWED_STATUSES: ReadonlyArray<PrismaAttendanceStatus> = [
   "PLANNED",
   "ABSENT",
-] as const
+] as const;
 
 const VISITOR_ALLOWED_STATUSES: ReadonlyArray<PrismaAttendanceStatus> = [
   "PLANNED",
   "ABSENT",
   "CANCELLED",
-] as const
+] as const;
 
 export function validateAttendanceStatus({
   type,
@@ -24,37 +24,37 @@ export function validateAttendanceStatus({
   type:
     | PrismaAttendanceType
     | Prisma.EnumAttendanceTypeFieldUpdateOperationsInput
-    | undefined
+    | undefined;
   status:
     | PrismaAttendanceStatus
     | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
-    | undefined
+    | undefined;
 }): void {
-  const actualType = typeof type === "object" ? type.set : type
-  const actualStatus = typeof status === "object" ? status.set : status
+  const actualType = typeof type === "object" ? type.set : type;
+  const actualStatus = typeof status === "object" ? status.set : status;
 
   if (actualType === undefined && actualStatus === undefined) {
-    return
+    return;
   }
 
-  invariantResponse(actualType !== undefined, "Type must be provided")
+  invariantResponse(actualType !== undefined, "Type must be provided");
 
-  invariantResponse(actualStatus !== undefined, "Status must be provided")
+  invariantResponse(actualStatus !== undefined, "Status must be provided");
 
   match(actualType)
     .with("REGULAR", (regularType) => {
       invariantResponse(
         REGULAR_ALLOWED_STATUSES.includes(actualStatus),
         `Invalid status "${actualStatus}" for attendance type "${regularType}". Regular attendances can only be PLANNED or ABSENT`,
-      )
+      );
     })
     .with("VISITOR", (visitorType) => {
       invariantResponse(
         VISITOR_ALLOWED_STATUSES.includes(actualStatus),
         `Invalid status "${actualStatus}" for attendance type "${visitorType}". Visitor attendances can only be PLANNED, ABSENT or CANCELLED`,
-      )
+      );
     })
-    .exhaustive()
+    .exhaustive();
 }
 
 export const attendanceValidationExtension = Prisma.defineExtension({
@@ -64,12 +64,12 @@ export const attendanceValidationExtension = Prisma.defineExtension({
       async update({ args, query }) {
         const {
           data: { type, status },
-        } = args
+        } = args;
 
-        validateAttendanceStatus({ type, status })
+        validateAttendanceStatus({ type, status });
 
-        return query(args)
+        return query(args);
       },
     },
   },
-})
+});

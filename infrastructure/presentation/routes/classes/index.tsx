@@ -5,18 +5,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "infrastructure/presentation/components/ui/breadcrumb"
-import { useBreadcrumbs } from "infrastructure/presentation/lib/useBreadcrumbs"
-import { NavLink, Outlet } from "react-router"
-import { Fragment } from "react/jsx-runtime"
+} from "infrastructure/presentation/components/ui/breadcrumb";
+import { useBreadcrumbs } from "infrastructure/presentation/lib/useBreadcrumbs";
+import { NavLink, Outlet } from "react-router";
+import { Fragment } from "react/jsx-runtime";
 
 export const handle = {
   label: "Liste des prochains cours",
-}
-export type Handle = typeof handle
+};
+export type Handle = typeof handle;
 
 export default function Classes() {
-  const breadcrumbs = useBreadcrumbs()
+  const breadcrumbs = useBreadcrumbs();
 
   return (
     <div className="p-12 flex flex-col gap-12">
@@ -51,5 +51,5 @@ export default function Classes() {
         <Outlet />
       </main>
     </div>
-  )
+  );
 }

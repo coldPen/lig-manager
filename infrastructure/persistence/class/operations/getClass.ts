@@ -1,6 +1,6 @@
-import type { DetailedClass } from "domain/types/class"
-import type { ClassAttendance } from "domain/types/classAttendance"
-import { prisma } from "~/lib/db.server"
+import type { DetailedClass } from "domain/types/class";
+import type { ClassAttendance } from "domain/types/classAttendance";
+import { prisma } from "~/lib/db.server";
 
 export async function getClass(classId: string): Promise<DetailedClass> {
   const class_ = await prisma.class.findFirst({
@@ -30,10 +30,10 @@ export async function getClass(classId: string): Promise<DetailedClass> {
         },
       },
     },
-  })
+  });
 
   if (!class_) {
-    throw new Error(`Class not found: ${classId}`)
+    throw new Error(`Class not found: ${classId}`);
   }
 
   const classWithSeparatedAttendances: DetailedClass = {
@@ -48,7 +48,7 @@ export async function getClass(classId: string): Promise<DetailedClass> {
           attendance.type === "VISITOR",
       ),
     },
-  }
+  };
 
-  return classWithSeparatedAttendances
+  return classWithSeparatedAttendances;
 }
