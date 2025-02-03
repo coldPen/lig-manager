@@ -4,6 +4,5 @@
     "@trivago/prettier-plugin-sort-imports"
   ],
   "tailwindConfig": "./tailwind.config.ts",
-  "semi": false,
   "importOrderSeparation": true
 }
