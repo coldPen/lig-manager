@@ -1,37 +1,17 @@
 import { singleton } from "./singleton.server"
 import { PrismaClient } from "@prisma/client"
-import { validateAttendanceStatus } from "infrastructure/persistence/middleware/attendanceValidation"
-import { z } from "zod"
-
-const dataSchema = z.object({
-  id: z.string(),
-  status: z.enum(["PLANNED", "ABSENT", "CANCELLED"]),
-  type: z.enum(["REGULAR", "VISITOR"]),
-  classId: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-})
+import { attendanceValidationExtension } from "infrastructure/persistence/middleware/attendanceValidation"
 
 const prisma = singleton("prisma", () => {
   // NOTE: if you change anything in this function you'll need to restart
   // the dev server to see your changes.
-  const client = new PrismaClient().$extends({
-    query: {
-      classAttendance: {
-        async update({ args, query }) {
-          const {
-            data: { type, status },
-          } = args
+  const client = new PrismaClient()
 
-          validateAttendanceStatus(type, status)
+  // Extension that validates the status and type of an attendance record
+  client.$extends(attendanceValidationExtension)
 
-          return query(args)
-        },
-      },
-    },
-  })
-  // client.$use(attendanceValidationMiddleware)
   client.$connect()
+
   return client
 })
 

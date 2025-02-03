@@ -1,8 +1,8 @@
 import { invariantResponse } from "@epic-web/invariant"
-import type {
+import {
   Prisma,
-  AttendanceStatus as PrismaAttendanceStatus,
-  AttendanceType as PrismaAttendanceType,
+  type AttendanceStatus as PrismaAttendanceStatus,
+  type AttendanceType as PrismaAttendanceType,
 } from "@prisma/client"
 import { match } from "ts-pattern"
 
@@ -17,23 +17,29 @@ const VISITOR_ALLOWED_STATUSES: ReadonlyArray<PrismaAttendanceStatus> = [
   "CANCELLED",
 ] as const
 
-export function validateAttendanceStatus(
+export function validateAttendanceStatus({
+  type,
+  status,
+}: {
   type:
     | PrismaAttendanceType
     | Prisma.EnumAttendanceTypeFieldUpdateOperationsInput
-    | undefined,
+    | undefined
   status:
     | PrismaAttendanceStatus
     | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
-    | undefined,
-): void {
+    | undefined
+}): void {
   const actualType = typeof type === "object" ? type.set : type
   const actualStatus = typeof status === "object" ? status.set : status
 
-  // TODO: if one (and only one) is undefined, replace it with the data from the db
-  if (actualType === undefined || actualStatus === undefined) {
+  if (actualType === undefined && actualStatus === undefined) {
     return
   }
+
+  invariantResponse(actualType !== undefined, "Type must be provided")
+
+  invariantResponse(actualStatus !== undefined, "Status must be provided")
 
   match(actualType)
     .with("REGULAR", (regularType) => {
@@ -50,3 +56,20 @@ export function validateAttendanceStatus(
     })
     .exhaustive()
 }
+
+export const attendanceValidationExtension = Prisma.defineExtension({
+  name: "validate-attendance-type-and-status",
+  query: {
+    classAttendance: {
+      async update({ args, query }) {
+        const {
+          data: { type, status },
+        } = args
+
+        validateAttendanceStatus({ type, status })
+
+        return query(args)
+      },
+    },
+  },
+})
